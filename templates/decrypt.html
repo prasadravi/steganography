@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Decrypt Message | Image Synthesis{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:760px;">
+  <div class="card shadow p-4">
+    <h3 class="mb-3">🔓 Decrypt Hidden Message</h3>
+
+    <form id="decryptForm" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label class="form-label">Upload Stego Image (PNG)</label>
+        <input class="form-control" type="file" name="image" accept="image/png,image/*">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Or paste Stored Key</label>
+        <input class="form-control" type="text" name="s3_key" placeholder="e.g. local:stegos/test_stego.png">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">AES Key (must match encryption)</label>
+        <input class="form-control" type="text" name="aes_key" placeholder="Enter AES key">
+      </div>
+
+      <button class="btn btn-primary" type="submit">Decrypt Message</button>
+    </form>
+
+    <div id="decryptResult" class="mt-4 d-none">
+      <h5>✅ Decrypted message</h5>
+      <pre id="decryptedText" style="white-space:pre-wrap; background:#f8f9fa; padding:12px; border-radius:6px;"></pre>
+    </div>
+
+    <div id="decryptError" class="mt-4 text-danger d-none"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('decryptForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const outMsg = document.getElementById('decryptError');
+  const resBox = document.getElementById('decryptResult');
+  outMsg.classList.add('d-none'); resBox.classList.add('d-none');
+
+  const fd = new FormData(e.target);
+
+  try {
+    const res = await fetch("{{ url_for('decrypt_stego') }}", {
+      method: 'POST',
+      body: fd,
+      credentials: 'same-origin'
+    });
+
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch (err) {
+      outMsg.textContent = `Server returned non-JSON (${res.status}). See console.`;
+      outMsg.classList.remove('d-none');
+      console.log("Raw response:", text);
+      return;
+    }
+
+    if (res.ok && data.message !== undefined) {
+      document.getElementById('decryptedText').textContent = data.message;
+      resBox.classList.remove('d-none');
+    } else {
+      outMsg.textContent = `${data.error || 'error'}${data.detail ? ' — '+data.detail : ''}`;
+      outMsg.classList.remove('d-none');
+    }
+  } catch (err) {
+    outMsg.textContent = `Network error: ${err.message}`;
+    outMsg.classList.remove('d-none');
+  }
+});
+</script>
+{% endblock %}

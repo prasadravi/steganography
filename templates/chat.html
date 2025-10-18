@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Chat - {{ friend.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-center text-primary mb-3">Chat with {{ friend.username }}</h2>
+
+  <!-- meta data for JS (editor-safe: JS doesn't see Jinja tokens directly) -->
+  <div id="chat-meta"
+       data-user="{{ current_user.id }}"
+       data-friend="{{ friend.id }}"
+       data-username="{{ current_user.username|e }}"></div>
+
+  <div id="chat-box" class="border rounded p-3 mb-3"
+       style="height: 400px; overflow-y: auto; background-color: #f8f9fa;">
+    <div class="text-muted text-center">Start chatting...</div>
+  </div>
+
+  <div class="input-group">
+    <input id="message" type="text" class="form-control" placeholder="Type your message..." />
+    <button id="sendBtn" class="btn btn-primary">Send</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+<script>
+/* chat client: reads data from #chat-meta so JS source stays static and editor-lint-friendly */
+(function() {
+  const meta = document.getElementById('chat-meta');
+  if (!meta) {
+    console.error("chat meta not found");
+    return;
+  }
+
+  // read dataset (always strings) and convert types as needed
+  const userId = Number(meta.dataset.user);
+  const friendId = Number(meta.dataset.friend);
+  const username = String(meta.dataset.username || '');
+
+  if (!userId || !friendId) {
+    console.error("Missing userId or friendId. Are you logged in and was friend passed to template?");
+    return;
+  }
+
+  const room = (userId < friendId) ? `${userId}_${friendId}` : `${friendId}_${userId}`;
+
+  // connect (explicit HTTP for local dev)
+  const socket = io("http://127.0.0.1:5050");
+
+  // join room
+  socket.emit("join", { room: room, username: username });
+
+  // receive messages
+  socket.on("message", (data) => {
+    const chatBox = document.getElementById("chat-box");
+    const wrapper = document.createElement("div");
+    wrapper.className = (data.sender_id === userId) ? "text-end text-primary mb-1" : "text-start text-success mb-1";
+
+    // Prefer plaintext if present, otherwise show encrypted
+    let content = "(empty message)";
+if (data.plaintext && data.plaintext.trim() !== "") {
+  content = escapeHtml(data.plaintext);
+}
+
+    wrapper.innerHTML = `<b>${data.sender_id === userId ? "You" : escapeHtml(username)}</b>: ${content}`;
+    chatBox.appendChild(wrapper);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+
+  // send message
+  document.getElementById("sendBtn").addEventListener('click', () => {
+    const input = document.getElementById("message");
+    const text = input.value.trim();
+    if (!text) return;
+    socket.emit("message", {
+      room: room,
+      message: text,
+      sender_id: userId,
+      receiver_id: friendId,
+      aes_key: "default-key"
+    });
+    input.value = "";
+  });
+
+  // helper
+  function escapeHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+})();
+</script>
+{% endblock %}

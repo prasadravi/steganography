@@ -1,0 +1,349 @@
+/* ===========================================
+   Global Theme - Modern Green Gradient UI
+=========================================== */
+:root {
+  --green: #4caf50;
+  --green-dark: #2e7d32;
+  --gray-bg: #f6f8f7;
+  --text-dark: #1e1e1e;
+  --text-light: #666;
+  --radius: 16px;
+  --shadow: 0 8px 20px rgba(0,0,0,0.08);
+  --transition: all 0.3s ease;
+  --gradient: linear-gradient(135deg, #4caf50, #81c784);
+}
+
+/* ================================
+   Base Layout
+================================ */
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--gray-bg);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--green-dark);
+  text-decoration: none;
+  transition: var(--transition);
+}
+a:hover {
+  color: var(--green);
+}
+
+.container {
+  animation: fadeInUp 0.6s ease;
+}
+
+/* ================================
+   Navbar
+================================ */
+.site-header {
+  background: var(--gradient);
+  color: #fff;
+  box-shadow: var(--shadow);
+  animation: fadeDown 0.6s ease;
+}
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: white !important;
+  transition: var(--transition);
+}
+.navbar-brand:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+.nav-link {
+  color: #ffffffcc !important;
+  font-weight: 500;
+  transition: var(--transition);
+}
+.nav-link:hover {
+  color: #fff !important;
+  transform: translateY(-2px);
+}
+
+/* ================================
+   Panels & Cards
+================================ */
+.panel {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 24px;
+  transition: var(--transition);
+}
+.panel:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* ================================
+   Buttons
+================================ */
+.btn {
+  border-radius: 50px;
+  font-weight: 600;
+  padding: 10px 24px;
+  transition: var(--transition);
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn-success {
+  background: var(--green);
+  border: none;
+}
+.btn-success:hover {
+  background: var(--green-dark);
+}
+.btn-outline-success {
+  border: 2px solid var(--green);
+  color: var(--green-dark);
+}
+.btn-outline-success:hover {
+  background: var(--green);
+  color: #fff;
+}
+
+/* ================================
+   Hero Section
+================================ */
+.hero {
+  background: var(--gradient);
+  color: white;
+  border-radius: var(--radius);
+  padding: 60px 40px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  animation: fadeInUp 1s ease;
+}
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+.hero p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* ================================
+   Profile Picture
+================================ */
+.profile-thumb {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+  animation: pulse 2s infinite;
+  object-fit: cover;
+}
+
+/* ================================
+   Forms
+================================ */
+input.form-control, textarea.form-control {
+  border-radius: 8px;
+  border: 2px solid #e8e8e8;
+  transition: var(--transition);
+}
+input.form-control:focus, textarea.form-control:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 0.15rem rgba(76,175,80,0.25);
+}
+
+/* ================================
+   Footer
+================================ */
+footer {
+  margin-top: 50px;
+  text-align: center;
+  padding: 20px 0;
+  color: var(--text-light);
+  border-top: 1px solid #e4e4e4;
+  font-size: 0.9rem;
+}
+
+/* ================================
+   Animations
+================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(76,175,80,0); }
+}
+
+/* ================================
+   Responsive Tweaks
+================================ */
+@media (max-width: 768px) {
+  .hero {
+    padding: 40px 20px;
+  }
+  .navbar-nav {
+    background: var(--green-dark);
+    border-radius: var(--radius);
+    padding: 10px;
+  }
+}
+/* ---------------------
+  Animated background
+   - gradient band
+   - soft blobs (SVG)
+   - canvas particles overlay
+---------------------- */
+
+.bg-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: -100; /* behind everything */
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* moving gradient */
+.bg-wrap .gradient {
+  position: absolute;
+  inset: -20% -20% -20% -20%;
+  background: linear-gradient(120deg, #66bb6a 0%, #4caf50 30%, #43a047 60%, #1b5e20 100%);
+  filter: blur(48px) saturate(120%);
+  transform: scale(1.15);
+  animation: gradientShift 12s linear infinite;
+  opacity: 0.95;
+}
+
+/* large soft SVG blobs */
+.blobs {
+  position: absolute;
+  inset: 0;
+  width: 140%;
+  height: 140%;
+  transform: translate(-6%, -6%);
+  filter: blur(20px);
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+  animation: blobMove 18s ease-in-out infinite;
+}
+
+/* particles canvas */
+#bgParticles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0.35;
+  mix-blend-mode: screen;
+}
+
+/* subtle page content lift so header is readable */
+.site-header {
+  background: rgba(255,255,255,0.06); /* keeps gradient visible underneath */
+  backdrop-filter: blur(6px) saturate(120%);
+}
+
+/* animations */
+@keyframes gradientShift {
+  0% { transform: translateX(-5%) scale(1.12) rotate(0deg); }
+  50% { transform: translateX(5%) scale(1.18) rotate(2deg); }
+  100% { transform: translateX(-5%) scale(1.12) rotate(0deg); }
+}
+
+@keyframes blobMove {
+  0% { transform: translate(-6%, -6%) scale(1); opacity: 0.9; }
+  50% { transform: translate(-8%, -4%) scale(1.05); opacity: 1; }
+  100% { transform: translate(-6%, -6%) scale(1); opacity: 0.9; }
+}
+
+/* ensure panels remain readable against animated background */
+.panel, .hero {
+  position: relative;
+  z-index: 1;
+  background: rgba(255,255,255,0.96);
+}
+
+/* lower intensity on small screens */
+@media (max-width: 768px) {
+  .bg-wrap .gradient { filter: blur(36px) saturate(110%); opacity: 0.85; }
+  .blobs { filter: blur(30px); opacity: 0.7; }
+  #bgParticles { opacity: 0.25; }
+}
+/* ===========================
+   Hero Highlight Styling (Fixed contrast)
+=========================== */
+.animated-hero {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.92));
+  border-radius: 20px;
+  padding: 80px 40px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 1.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.welcome-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #2e7d32;
+  animation: fadeDown 1s ease;
+}
+
+.main-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #1b5e20;
+  animation: fadeInUp 1.5s ease;
+}
+
+.main-heading span {
+  background: linear-gradient(90deg, #43a047, #66bb6a, #81c784);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #388e3c;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-top: 20px;
+  animation: fadeIn 2s ease;
+}
+
+/* Button with more contrast */
+.glow-btn {
+  background: linear-gradient(90deg, #43a047, #66bb6a);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+  transition: all 0.3s ease;
+}
+.glow-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 25px rgba(76, 175, 80, 0.7);
+  background: linear-gradient(90deg, #388e3c, #66bb6a);
+}

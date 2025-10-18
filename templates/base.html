@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Image Synthesis{% endblock %}</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2">
+
+  {% block head %}{% endblock %}
+</head>
+
+<body>
+  <!-- 🌈 Animated Background -->
+  <div class="bg-wrap" aria-hidden="true">
+    <div class="gradient"></div>
+    <svg class="blobs" viewBox="0 0 800 600" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stop-color="#66bb6a" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#43a047" stop-opacity="0.65"/>
+        </linearGradient>
+      </defs>
+      <g fill="url(#g1)" opacity="0.12">
+        <path id="b1" d="M0 400Q150 320 300 400T800 400L800 600 0 600Z"></path>
+        <path id="b2" d="M0 480Q200 380 400 480T800 480L800 600 0 600Z"></path>
+      </g>
+    </svg>
+    <canvas id="bgParticles"></canvas>
+  </div>
+
+  <!-- 🧭 Header / Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark site-header">
+    <div class="container">
+      <a class="navbar-brand brand" href="{{ url_for('home') }}">
+        <i class="fa-solid fa-lock"></i> Image Synthesis
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          {% if current_user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('user_home') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('select_friend') }}">Chat</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('requests_page') }}">Requests</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+          {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 🧱 Main Page Content -->
+  <main class="container py-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- 🦶 Footer -->
+  <footer>
+    <p>© 2025 Image Synthesis | Built with Flask 💚</p>
+  </footer>
+
+  <!-- ⚙️ Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Fade-in animation -->
+  <script>
+    document.body.style.opacity = 0;
+    window.addEventListener('pageshow', () => {
+      document.body.style.transition = 'opacity 0.6s ease';
+      document.body.style.opacity = 1;
+    });
+  </script>
+
+  <!-- Background animation JS -->
+  <script src="{{ url_for('static', filename='js/bg.js') }}"></script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

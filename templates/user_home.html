@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Image Synthesis{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-8">
+    <div class="panel">
+      <h3>Welcome, {{ current_user.username }}</h3>
+      <p>Use the links to search users, handle requests, or start chats. Upload encrypted messages as stego images through the chat/decrypt workflows.</p>
+    </div>
+
+    <div class="panel mt-3">
+      <h5>Quick actions</h5>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-success" href="{{ url_for('search') }}">Search Friends</a>
+        <a class="btn btn-outline-primary" href="{{ url_for('requests_page') }}">View Requests</a>
+        <a class="btn green-btn" href="{{ url_for('select_friend') }}">Start Chat</a>
+        <a class="btn btn-outline-secondary" href="{{ url_for('profile', user_id=current_user.id) }}">Profile</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 text-center">
+    <div class="panel">
+      <h6>Profile</h6>
+      {% if current_user.profile_image %}
+        <img src="{{ url_for('static', filename='images/default_profile.png') }}" alt="profile" class="profile-thumb mb-2">
+        <!-- In real app: use presigned S3 URL -->
+      {% else %}
+        <div class="muted-bar py-5">No profile image</div>
+      {% endif %}
+      <p class="mt-2"><strong>{{ current_user.username }}</strong></p>
+      <p class="text-muted small">{{ current_user.email }}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

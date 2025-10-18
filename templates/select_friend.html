@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Select Friend — Image Synthesis{% endblock %}
+{% block content %}
+<div class="panel">
+  <h4>Select Friend to Chat</h4>
+
+  {% if friends %}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead><tr><th>User Name</th><th>Profile</th><th>Action</th></tr></thead>
+        <tbody>
+          {% for f in friends %}
+            <tr>
+              <td>{{ f.username }}</td>
+              <td>
+                {% if f.profile_image %}
+                  <img src="{{ url_for('static', filename='images/default_profile.png') }}" alt="p" style="height:48px; width:48px; object-fit:cover; border-radius:6px;">
+                {% else %}
+                  <div class="muted-bar p-2">No image</div>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{{ url_for('chat', friend_id=f.id) }}" class="btn btn-sm green-btn">Start to Chat</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="text-muted">You have no friends yet. Send requests from the Search page.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Login — Image Synthesis{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="panel text-center">
+      <h3 class="mb-3">Login</h3>
+      <form method="POST" novalidate>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input class="form-control" name="email" type="email" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input class="form-control" name="password" type="password" required>
+        </div>
+        <button class="btn green-btn w-100" type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

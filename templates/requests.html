@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Friend Requests{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <h3>Friend Requests</h3>
+
+  {% if incoming %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Profile</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r, from_user in incoming %}
+        <tr>
+          <td>{{ from_user.username if from_user else ('User #' ~ r.from_user_id) }}</td>
+          <td>
+            {% if from_user and from_user.profile_image %}
+              {% if from_user.profile_image.startswith('local:') %}
+                <img src="{{ url_for('static', filename='uploads/' + from_user.profile_image.split('local:')[-1]) }}" width="48" class="rounded-circle">
+              {% else %}
+                <img src="{{ from_user.profile_image }}" width="48" class="rounded-circle">
+              {% endif %}
+            {% else %}
+              <div class="rounded-circle bg-light text-center" style="width:48px;height:48px;line-height:48px;color:#666;">N/A</div>
+            {% endif %}
+          </td>
+          <td>
+            <form method="post" action="{{ url_for('handle_request', req_id=r.id, action='accept') }}" style="display:inline;">
+              <button class="btn btn-success btn-sm">Accept</button>
+            </form>
+            <form method="post" action="{{ url_for('handle_request', req_id=r.id, action='reject') }}" style="display:inline;">
+              <button class="btn btn-danger btn-sm">Reject</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No pending requests.</p>
+  {% endif %}
+</div>
+{% endblock %}

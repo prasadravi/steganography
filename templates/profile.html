@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Profile — Image Synthesis{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="panel text-center">
+      <h4>Profile Details</h4>
+      {% if profile_url %}
+        <img src="{{ profile_url }}" alt="profile" class="profile-thumb mb-3">
+      {% elif user_obj.profile_image %}
+        <!-- fallback S3 key shown as text -->
+        <div class="muted-bar mb-3">Profile stored in S3</div>
+      {% else %}
+        <div class="muted-bar mb-3">No image</div>
+      {% endif %}
+
+      <div class="text-start mt-3">
+        <p><strong>User Name: </strong> {{ user_obj.username }}</p>
+        <p><strong>Email Id: </strong> {{ user_obj.email }}</p>
+        <p><strong>Mobile Number: </strong> {{ user_obj.mobile or '-' }}</p>
+        <p><strong>Address: </strong> {{ user_obj.address or '-' }}</p>
+      </div>
+
+      {% if current_user.is_authenticated and current_user.id == user_obj.id %}
+        <a class="btn btn-outline-primary mt-2" href="{{ url_for('user_home') }}">Edit Profile</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

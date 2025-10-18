@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+instance/
+*.db
+.env
+static/uploads/
+.env.local
+.env.production
+
